@@ -68,9 +68,13 @@ ui <- fluidPage(
     selectInput('team1',"Team 1", unique(nbadata2$Team)),
     selectInput('team2', "Team 2", unique(nbadata2$Team))),
   mainPanel(
-    plotlyOutput('compare_plot')
+    tabsetPanel(
+      tabPanel("Scatterplot", plotlyOutput("compare_plot")),
+      tabPanel("Histogram for X Variable", plotlyOutput('compare_plot_hist'))
+      )
+    )
   )
-)
+
 
 server <- function(input, output) {
   
@@ -81,6 +85,16 @@ server <- function(input, output) {
   y <- reactive({
     nbadata2[,input$ycol]
   })
+  
+  output$plot <- renderPlotly(
+    plot1 <- plot_ly(
+      x = x(),
+      y = y(), 
+      color=nbadata2$Player,
+      showlegend=FALSE,
+      type = 'scatter',
+      mode = 'markers') %>%
+      layout(xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
   
   compare_data <- reactive(nbadata2 %>% filter(Team %in% c(input$team1,input$team2)))
   
@@ -94,15 +108,9 @@ server <- function(input, output) {
                                         geom_point(aes(x=compare_data_x(),y=compare_data_y(),color=Team)) +
                                         xlab(input$xcol) + ylab(input$ycol))
   
-  output$plot <- renderPlotly(
-    plot1 <- plot_ly(
-      x = x(),
-      y = y(), 
-      color=nbadata2$Player,
-      showlegend=FALSE,
-      type = 'scatter',
-      mode = 'markers') %>%
-      layout(xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
+  output$compare_plot_hist <- renderPlotly(ggplot(compare_data(), aes(x=compare_data_x(), color = Team)) +
+                                      geom_histogram(fill = "white", position = "dodge")+
+                                      xlab(input$xcol) + ggtitle(paste("Histogram for ",input$xcol)))
 }
 
 shinyApp(ui,server)
