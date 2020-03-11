@@ -56,8 +56,6 @@ nbadata2<-nbadata2%>%
     
   )
 
-global_colors <- NULL
-
 
 #Shiny App
 library(shiny)
