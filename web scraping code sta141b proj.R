@@ -10,48 +10,49 @@ nbadata <- url %>%
 attach(nbadata)
 
 #The variables names appeared multiple times in the dataset so we must remove them
-nbadata<- nbadata[-c(23, 54, 77, 102, 133, 160, 187, 216, 239, 264, 291, 312,
-                     337, 362, 385, 406, 430, 457, 480, 503, 528, 551, 579, 604, 631), ]
+nbadata2<- nbadata %>% 
+  filter(!grepl('Player', Player))
 
 #Convert necessary columns from character to numeric
 cols = c(1,4, 6:30)    
-nbadata[,cols] = apply(nbadata[,cols],2,  function(x) as.numeric(as.character(x)))
+nbadata2[,cols] = apply(nbadata2[,cols],2,  function(x) as.numeric(as.character(x)))
 
 #Replace "NAs" with 0s
-nbadata<- nbadata%>%
+nbadata2<- nbadata2%>%
   mutate_all(~replace(., is.na(.), 0))
 
-
-#Dataset Description
-#Rk -- Rank
-#Pos -- Position
-#Age -- Player's age on February 1 of the season
-#Tm -- Team
-#G -- Games
-#GS -- Games Started
-#MP -- Minutes Played Per Game
-#FG -- Field Goals Per Game
-#FGA -- Field Goal Attempts Per Game
-#FG% -- Field Goal Percentage
-#3P -- 3-Point Field Goals Per Game
-#3PA -- 3-Point Field Goal Attempts Per Game
-#3P% -- FG% on 3-Pt FGAs.
-#2P -- 2-Point Field Goals Per Game
-#2PA -- 2-Point Field Goal Attempts Per Game
-#2P% -- FG% on 2-Pt FGAs.
-#eFG% -- Effective Field Goal Percentage
-#This statistic adjusts for the fact that a 3-point field goal is worth one more point than a 2-point field goal.
-#FT -- Free Throws Per Game
-#FTA -- Free Throw Attempts Per Game
-#FT% -- Free Throw Percentage
-#ORB -- Offensive Rebounds Per Game
-#DRB -- Defensive Rebounds Per Game
-#TRB -- Total Rebounds Per Game
-#AST -- Assists Per Game
-#STL -- Steals Per Game
-#BLK -- Blocks Per Game
-#TOV -- Turnovers Per Game
-#PF -- Personal Fouls Per Game
-#PTS -- Points Per Game
+#Make variable names more descriptive for shiny app 
+nbadata2<-nbadata2%>%
+  rename(
+    "Rank"="Rk",
+    "Position"="Pos",
+    "Team"="Tm",
+    "Games"="G",
+    "Games Started"= "GS",
+    "Minutes Played Per Game"="MP",
+    "Field Goals Per Game"="FG",
+    "Field Goal Attempts Per game"="FGA",
+    "Field Goal Percentage"="FG%",
+    "3-Point Field Goals Per Game"="3P",
+    "3-Point Field Goal Attempts Per Game"="3PA",
+    "FG% on 3-Pt FGAs"="3P%",
+    "2-Point Field Goals Per Game"="2P",
+    "2-Point Field Goal Attempts Per Game"="2PA",
+    "FG% on 2-Pt FGAs"="2P%",
+    "Effective Field Goal Percentage"="eFG%",
+    "Free Throws Per Game"="FT",
+    "Free Throw Attempts Per Game"="FTA",
+    "Free Throw Percentage"="FT%",
+    "Offensive Rebounds Per Game"="ORB",
+    "Defensive Rebounds Per Game"="DRB",
+    "Total Rebounds Per Game"="TRB",
+    "Assists Per Game"="AST",
+    "Steals Per Game"="STL",
+    "Blocks Per Game"="BLK",
+    "Turnovers Per Game"="TOV",
+    "Personal Fouls Per Game"="PF",
+    "Points Per Game"="PTS"
+    
+  )
 
 
