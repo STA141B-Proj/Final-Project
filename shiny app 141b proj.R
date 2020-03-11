@@ -62,11 +62,11 @@ cols2 = c(4,5 ,6:30)
 ui <- fluidPage(
   headerPanel('NBA Stats'),
   sidebarPanel(
-    selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="MP"),
-    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="PTS"),
+   selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="Minutes Played Per Game"),
+    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="Points Per Game"),
     selected = names(nbadata[cols2])[[2]],
-    selectInput('team1',"Team 1", unique(nbadata2$Team)),
-    selectInput('team2', "Team 2", unique(nbadata2$Team))),
+    selectInput('team1',"Team 1", unique(nbadata2$Team), selected="GSW"),
+    selectInput('team2', "Team 2", unique(nbadata2$Team), selected="LAL")),
   mainPanel(
     tabsetPanel(
       tabPanel("Scatterplot", plotlyOutput("compare_plot")),
