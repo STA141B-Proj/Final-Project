@@ -1,5 +1,6 @@
 library(tidyverse)
 library(rvest)
+library(plotly)
 #Read in url
 url<-("https://www.basketball-reference.com/leagues/NBA_2020_per_game.html")
 nbadata <- url %>% 
@@ -61,11 +62,13 @@ cols2 = c(4,5 ,6:30)
 ui <- fluidPage(
   headerPanel('NBA Stats'),
   sidebarPanel(
-    selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="Minutes Played Per Game"),
-    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="Points Per Game"),
-    selected = names(nbadata[cols2])[[2]]),
+    selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="MP"),
+    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="PTS"),
+    selected = names(nbadata[cols2])[[2]],
+    selectInput('team1',"Team 1", unique(nbadata2$Team)),
+    selectInput('team2', "Team 2", unique(nbadata2$Team))),
   mainPanel(
-    plotlyOutput('plot')
+    plotlyOutput('compare_plot')
   )
 )
 
@@ -79,6 +82,17 @@ server <- function(input, output) {
     nbadata2[,input$ycol]
   })
   
+  compare_data <- reactive(nbadata2 %>% filter(Team %in% c(input$team1,input$team2)))
+  
+  compare_data_x <- reactive(
+    compare_data()[,input$xcol])
+  
+  compare_data_y <- reactive(
+    compare_data()[,input$ycol])
+  
+  output$compare_plot <- renderPlotly(ggplot(compare_data())+
+                                        geom_point(aes(x=compare_data_x(),y=compare_data_y(),color=Team)) +
+                                        xlab(input$xcol) + ylab(input$ycol))
   
   output$plot <- renderPlotly(
     plot1 <- plot_ly(
@@ -87,14 +101,8 @@ server <- function(input, output) {
       color=nbadata2$Player,
       showlegend=FALSE,
       type = 'scatter',
-      mode = 'markers'
-    )%>%layout(xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
-  
-  
+      mode = 'markers') %>%
+      layout(xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
 }
 
 shinyApp(ui,server)
-
-
-
-
