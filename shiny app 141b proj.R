@@ -61,8 +61,8 @@ cols2 = c(4,5 ,6:30)
 ui <- fluidPage(
   headerPanel('NBA Stats'),
   sidebarPanel(
-    selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="MP"),
-    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="PTS"),
+    selectInput('xcol','X Variable', names(nbadata2[cols2]), selected="Minutes Played Per Game"),
+    selectInput('ycol','Y Variable', names(nbadata2[cols2]), selected="Points Per Game"),
     selected = names(nbadata[cols2])[[2]]),
   mainPanel(
     plotlyOutput('plot')
