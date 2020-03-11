@@ -11,8 +11,8 @@ nbadata <- url %>%
 attach(nbadata)
 
 #The variables names appeared multiple times in the dataset so we must remove them
-nbadata2<- nbadata[-c(23, 54, 77, 102, 133, 160, 187, 216, 239, 264, 291, 312,
-                      337, 362, 385, 406, 430, 457, 480, 503, 528, 551, 579, 604, 631), ]
+nbadata2<- nbadata %>% 
+  filter(!grepl('Player', Player))
 
 #Convert necessary columns from character to numeric
 cols = c(1,4, 6:30)    
