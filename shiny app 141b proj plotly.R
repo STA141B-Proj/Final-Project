@@ -57,6 +57,8 @@ nbadata2<-nbadata2%>%
   )
 
 
+
+
 #Shiny App
 library(shiny)
 cols2 = c(4,5 ,6:30)
@@ -124,9 +126,18 @@ server <- function(input, output) {
   )%>%layout(xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
   
   
-  output$compare_plot_hist <- renderPlotly(ggplot(compare_data(), aes(x=compare_data_x(), color = Team)) +
-                                             geom_histogram(fill = "white", position = "dodge")+
-                                             xlab(input$xcol) + ggtitle(paste("Histogram for ",input$xcol)))
+  output$compare_plot_hist <- renderPlotly(plot2<-plot_ly(
+    data=compare_data(),
+    x=compare_data_x(),
+    type="histogram",
+    color=~Team,
+    text=~Team
+    )%>%layout(xaxis = list(title = input$xcol), yaxis=list(title="Count")))
+  
+  
+  
+  
+  
 }
 
 shinyApp(ui,server)
