@@ -66,10 +66,11 @@ library(shiny)
 
 cols2 = c(4,6:30)
 ui <- fluidPage(
-  headerPanel('Comparing Per Game Individual NBA Stats'),
+  titlePanel('Comparing Per Game Individual NBA Stats'),
+  headerPanel('Input Selection'),
   sidebarPanel(
-    selectInput(sort('xcol'),'X Variable', names, selected="Minutes Played"),
-    selectInput('ycol','Y Variable', names, selected="Points"),
+    selectInput('xcol','X Variable', statnames, selected="Minutes Played"),
+    selectInput('ycol','Y Variable', statnames, selected="Points"),
     selected = names(nbadata[cols2])[[2]],
     selectInput('team1',"Team 1", teamnames, selected="GSW"),
     selectInput('team2', "Team 2", teamnames, selected="LAL"),
@@ -90,11 +91,9 @@ server <- function(input, output) {
   
   #reactive for team comparison data
   compare_data <- reactive(nbadata2 %>% filter(Team %in% c(input$team1,input$team2)))
-   compare_data_x <- reactive(
-    compare_data()[,input$xcol])
+  compare_data_x <- reactive(compare_data()[,input$xcol])
   
-  compare_data_y <- reactive(
-    compare_data()[,input$ycol])
+  compare_data_y <- reactive(compare_data()[,input$ycol])
   
   teamcolor<-reactive(nbadata2[,5] %>% filter(Team %in% c(input$team1,input$team2)))
   
@@ -174,3 +173,4 @@ server <- function(input, output) {
 }
 
 shinyApp(ui,server)
+
