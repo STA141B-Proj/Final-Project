@@ -61,6 +61,67 @@ teamnames=sort(unique(nbadata2$Team))
 #Remove team name "TOT" which represents total stats for players who have played for multiple teams
 teamnames=teamnames[-29]
 
+
+#Scale Data for polar diagram
+#Scale from 0 to 100, essentially a percentile ranking
+
+library(scales)
+scaled<-nbadata2
+scaled$`Age`<-round(rescale(scaled$`Age`, to = c(0, 100), 
+                                 from = range(scaled$`Age`, finite = TRUE)), digits=2)
+scaled$`Games`<-round(rescale(scaled$`Games`, to = c(0, 100), 
+                                 from = range(scaled$`Games`, finite = TRUE)), digits=2)
+scaled$`Games Started`<-round(rescale(scaled$`Games Started`, to = c(0, 100), 
+                                      from = range(scaled$`Games Started`, finite = TRUE)), digits=2)
+scaled$`Minutes Played`<-round(rescale(scaled$`Minutes Played`, to = c(0, 100), 
+                                 from = range(scaled$`Minutes Played`, finite = TRUE)), digits=2)
+scaled$`Field Goals`<-round(rescale(scaled$`Field Goals`, to = c(0, 100), 
+                              from = range(scaled$`Field Goals`, finite = TRUE)), digits=2)
+scaled$`Field Goal Attempts`<-round(rescale(scaled$`Field Goal Attempts`, to = c(0, 100), 
+                                      from = range(scaled$`Field Goal Attempts`, finite = TRUE)), digits=2)
+scaled$`Field Goal Percentage`<-round(rescale(scaled$`Field Goal Percentage`, to = c(0, 100), 
+                                      from = range(scaled$`Field Goal Percentage`, finite = TRUE)), digits=2)
+scaled$`3-Point Field Goals`<-round(rescale(scaled$`3-Point Field Goals`, to = c(0, 100), 
+                                      from = range(scaled$`3-Point Field Goals`, finite = TRUE)), digits=2)
+scaled$`3-Point Field Goal Attempts`<-round(rescale(scaled$`3-Point Field Goal Attempts`, to = c(0, 100), 
+                                      from = range(scaled$`3-Point Field Goal Attempts`, finite = TRUE)), digits=2)
+scaled$`FG% on 3-Pt FGAs`<-round(rescale(scaled$`FG% on 3-Pt FGAs`, to = c(0, 100), 
+                                      from = range(scaled$`FG% on 3-Pt FGAs`, finite = TRUE)), digits=2)
+
+scaled$`2-Point Field Goals`<-round(rescale(scaled$`2-Point Field Goals`, to = c(0, 100), 
+                                            from = range(scaled$`2-Point Field Goals`, finite = TRUE)), digits=2)
+scaled$`2-Point Field Goal Attempts`<-round(rescale(scaled$`2-Point Field Goal Attempts`, to = c(0, 100), 
+                                                    from = range(scaled$`2-Point Field Goal Attempts`, finite = TRUE)), digits=2)
+scaled$`FG% on 2-Pt FGAs`<-round(rescale(scaled$`FG% on 2-Pt FGAs`, to = c(0, 100), 
+                                         from = range(scaled$`FG% on 2-Pt FGAs`, finite = TRUE)), digits=2)
+
+scaled$`Effective Field Goal Percentage`<-round(rescale(scaled$`Effective Field Goal Percentage`, to = c(0, 100), 
+                              from = range(scaled$`Effective Field Goal Percentage`, finite = TRUE)), digits=2)
+scaled$`Free Throws`<-round(rescale(scaled$`Free Throws`, to = c(0, 100), 
+                              from = range(scaled$`Free Throws`, finite = TRUE)), digits=2)
+
+scaled$`Free Throw Attempts`<-round(rescale(scaled$`Free Throw Attempts`, to = c(0, 100), 
+                              from = range(scaled$`Free Throw Attempts`, finite = TRUE)), digits=2)
+scaled$`Free Throw Percentage`<-round(rescale(scaled$`Free Throw Percentage`, to = c(0, 100), 
+                              from = range(scaled$`Free Throw Percentage`, finite = TRUE)), digits=2)
+scaled$`Offensive Rebounds`<-round(rescale(scaled$`Offensive Rebounds`, to = c(0, 100), 
+                              from = range(scaled$`Offensive Rebounds`, finite = TRUE)), digits=2)
+scaled$`Defensive Rebounds`<-round(rescale(scaled$`Defensive Rebounds`, to = c(0, 100), 
+                              from = range(scaled$`Defensive Rebounds`, finite = TRUE)), digits=2)
+scaled$`Total Rebounds`<-round(rescale(scaled$`Total Rebounds`, to = c(0, 100), 
+                              from = range(scaled$`Total Rebounds`, finite = TRUE)), digits=2)
+scaled$`Assists`<-round(rescale(scaled$`Assists`, to = c(0, 100), 
+                              from = range(scaled$`Assists`, finite = TRUE)), digits=2)
+scaled$`Steals`<-round(rescale(scaled$`Steals`, to = c(0, 100), 
+                              from = range(scaled$`Steals`, finite = TRUE)), digits=2)
+scaled$`Blocks`<-round(rescale(scaled$`Blocks`, to = c(0, 100), 
+                              from = range(scaled$`Blocks`, finite = TRUE)), digits=2)
+scaled$`Turnovers`<-round(rescale(scaled$`Turnovers`, to = c(0, 100), 
+                              from = range(scaled$`Turnovers`, finite = TRUE)), digits=2)
+scaled$`Personal Fouls`<-round(rescale(scaled$`Personal Fouls`, to = c(0, 100), 
+                              from = range(scaled$`Personal Fouls`, finite = TRUE)), digits=2)
+scaled$`Points`<-round(rescale(scaled$`Points`, to = c(0, 100), 
+                              from = range(scaled$`Points`, finite = TRUE)), digits=2)
 #Shiny App
 library(shiny)
 
@@ -74,8 +135,8 @@ ui <- fluidPage(
     selected = names(nbadata[cols2])[[2]],
     selectInput('team1',"Team 1", teamnames, selected="GSW"),
     selectInput('team2', "Team 2", teamnames, selected="LAL"),
-    selectInput('player1', "Player 1", unique(nbadata2$Player), selected="Giannis Antetokounmpo"),
-    selectInput('player2', "Player 2", unique(nbadata2$Player), selected="James Harden")),
+    selectInput('player1', "Player 1 (Orange)", unique(nbadata2$Player), selected="Giannis Antetokounmpo"),
+    selectInput('player2', "Player 2 (Green)", unique(nbadata2$Player), selected="James Harden")),
   mainPanel(
     tabsetPanel(
       tabPanel("Scatterplot Team Comparison", plotlyOutput("compare_plot")),
@@ -143,14 +204,12 @@ server <- function(input, output) {
       layout(title="Individual Stats Colored By Position", 
              xaxis = list(title = input$xcol), yaxis = list(title = input$ycol)))
   
- 
+  
   #Data for polar diagram comparing players
-  scatterpolar_data1 <- reactive(nbadata2 %>% filter(Player == input$player1) %>% 
-                                   select(c("Field Goals", "3-Point Field Goals",
-                                            "Free Throws", "Assists", "Total Rebounds")))
-  scatterpolar_data2 <- reactive(nbadata2 %>% filter(Player == input$player2) %>% 
-                                   select(c("Field Goals", "3-Point Field Goals",
-                                            "Free Throws", "Assists", "Total Rebounds" )))
+  scatterpolar_data1 <- reactive(scaled %>% filter(Player == input$player1) %>% 
+                                   select(names(scaled[4,6:30])))
+  scatterpolar_data2 <- reactive(scaled %>% filter(Player == input$player2) %>% 
+                                   select(names(scaled[4,6:30])))
   #Plot of polar diagram
   output$scatterpolar <- renderPlotly(
     plot_ly(
@@ -165,12 +224,10 @@ server <- function(input, output) {
         name = input$player2,
         r = as.numeric(scatterpolar_data2()[1,]),
         theta = names(scatterpolar_data2())) %>% 
-      layout(title="Polar Diagram Player Comparison",
-        polar = list(
-          radialaxis = list(
-            visible = T,
-            range = "auto")), showlegend = T)) 
+      layout(polar = list(
+               radialaxis = list(
+                 visible = T,
+                 range = "auto")), showlegend = F)) 
 }
 
 shinyApp(ui,server)
-
