@@ -55,6 +55,9 @@ nbadata2<-nbadata2%>%
     "Points"="PTS"
     
   )
+
+#Stats to be used in graphs
+cols2 = c(4,6:30)
 #Alphabetize names for app
 statnames=sort(names(nbadata2[cols2]))
 teamnames=sort(unique(nbadata2$Team))
@@ -63,30 +66,30 @@ teamnames=teamnames[-29]
 
 
 #Scale Data for polar diagram
-#Scale from 0 to 100, essentially a percentile ranking
+#Scale from 0 to 100
 
 library(scales)
 scaled<-nbadata2
 scaled$`Age`<-round(rescale(scaled$`Age`, to = c(0, 100), 
-                                 from = range(scaled$`Age`, finite = TRUE)), digits=2)
+                            from = range(scaled$`Age`, finite = TRUE)), digits=2)
 scaled$`Games`<-round(rescale(scaled$`Games`, to = c(0, 100), 
-                                 from = range(scaled$`Games`, finite = TRUE)), digits=2)
+                              from = range(scaled$`Games`, finite = TRUE)), digits=2)
 scaled$`Games Started`<-round(rescale(scaled$`Games Started`, to = c(0, 100), 
                                       from = range(scaled$`Games Started`, finite = TRUE)), digits=2)
 scaled$`Minutes Played`<-round(rescale(scaled$`Minutes Played`, to = c(0, 100), 
-                                 from = range(scaled$`Minutes Played`, finite = TRUE)), digits=2)
+                                       from = range(scaled$`Minutes Played`, finite = TRUE)), digits=2)
 scaled$`Field Goals`<-round(rescale(scaled$`Field Goals`, to = c(0, 100), 
-                              from = range(scaled$`Field Goals`, finite = TRUE)), digits=2)
+                                    from = range(scaled$`Field Goals`, finite = TRUE)), digits=2)
 scaled$`Field Goal Attempts`<-round(rescale(scaled$`Field Goal Attempts`, to = c(0, 100), 
-                                      from = range(scaled$`Field Goal Attempts`, finite = TRUE)), digits=2)
+                                            from = range(scaled$`Field Goal Attempts`, finite = TRUE)), digits=2)
 scaled$`Field Goal Percentage`<-round(rescale(scaled$`Field Goal Percentage`, to = c(0, 100), 
-                                      from = range(scaled$`Field Goal Percentage`, finite = TRUE)), digits=2)
+                                              from = range(scaled$`Field Goal Percentage`, finite = TRUE)), digits=2)
 scaled$`3-Point Field Goals`<-round(rescale(scaled$`3-Point Field Goals`, to = c(0, 100), 
-                                      from = range(scaled$`3-Point Field Goals`, finite = TRUE)), digits=2)
+                                            from = range(scaled$`3-Point Field Goals`, finite = TRUE)), digits=2)
 scaled$`3-Point Field Goal Attempts`<-round(rescale(scaled$`3-Point Field Goal Attempts`, to = c(0, 100), 
-                                      from = range(scaled$`3-Point Field Goal Attempts`, finite = TRUE)), digits=2)
+                                                    from = range(scaled$`3-Point Field Goal Attempts`, finite = TRUE)), digits=2)
 scaled$`FG% on 3-Pt FGAs`<-round(rescale(scaled$`FG% on 3-Pt FGAs`, to = c(0, 100), 
-                                      from = range(scaled$`FG% on 3-Pt FGAs`, finite = TRUE)), digits=2)
+                                         from = range(scaled$`FG% on 3-Pt FGAs`, finite = TRUE)), digits=2)
 
 scaled$`2-Point Field Goals`<-round(rescale(scaled$`2-Point Field Goals`, to = c(0, 100), 
                                             from = range(scaled$`2-Point Field Goals`, finite = TRUE)), digits=2)
@@ -96,36 +99,35 @@ scaled$`FG% on 2-Pt FGAs`<-round(rescale(scaled$`FG% on 2-Pt FGAs`, to = c(0, 10
                                          from = range(scaled$`FG% on 2-Pt FGAs`, finite = TRUE)), digits=2)
 
 scaled$`Effective Field Goal Percentage`<-round(rescale(scaled$`Effective Field Goal Percentage`, to = c(0, 100), 
-                              from = range(scaled$`Effective Field Goal Percentage`, finite = TRUE)), digits=2)
+                                                        from = range(scaled$`Effective Field Goal Percentage`, finite = TRUE)), digits=2)
 scaled$`Free Throws`<-round(rescale(scaled$`Free Throws`, to = c(0, 100), 
-                              from = range(scaled$`Free Throws`, finite = TRUE)), digits=2)
+                                    from = range(scaled$`Free Throws`, finite = TRUE)), digits=2)
 
 scaled$`Free Throw Attempts`<-round(rescale(scaled$`Free Throw Attempts`, to = c(0, 100), 
-                              from = range(scaled$`Free Throw Attempts`, finite = TRUE)), digits=2)
+                                            from = range(scaled$`Free Throw Attempts`, finite = TRUE)), digits=2)
 scaled$`Free Throw Percentage`<-round(rescale(scaled$`Free Throw Percentage`, to = c(0, 100), 
-                              from = range(scaled$`Free Throw Percentage`, finite = TRUE)), digits=2)
+                                              from = range(scaled$`Free Throw Percentage`, finite = TRUE)), digits=2)
 scaled$`Offensive Rebounds`<-round(rescale(scaled$`Offensive Rebounds`, to = c(0, 100), 
-                              from = range(scaled$`Offensive Rebounds`, finite = TRUE)), digits=2)
+                                           from = range(scaled$`Offensive Rebounds`, finite = TRUE)), digits=2)
 scaled$`Defensive Rebounds`<-round(rescale(scaled$`Defensive Rebounds`, to = c(0, 100), 
-                              from = range(scaled$`Defensive Rebounds`, finite = TRUE)), digits=2)
+                                           from = range(scaled$`Defensive Rebounds`, finite = TRUE)), digits=2)
 scaled$`Total Rebounds`<-round(rescale(scaled$`Total Rebounds`, to = c(0, 100), 
-                              from = range(scaled$`Total Rebounds`, finite = TRUE)), digits=2)
+                                       from = range(scaled$`Total Rebounds`, finite = TRUE)), digits=2)
 scaled$`Assists`<-round(rescale(scaled$`Assists`, to = c(0, 100), 
-                              from = range(scaled$`Assists`, finite = TRUE)), digits=2)
+                                from = range(scaled$`Assists`, finite = TRUE)), digits=2)
 scaled$`Steals`<-round(rescale(scaled$`Steals`, to = c(0, 100), 
-                              from = range(scaled$`Steals`, finite = TRUE)), digits=2)
+                               from = range(scaled$`Steals`, finite = TRUE)), digits=2)
 scaled$`Blocks`<-round(rescale(scaled$`Blocks`, to = c(0, 100), 
-                              from = range(scaled$`Blocks`, finite = TRUE)), digits=2)
+                               from = range(scaled$`Blocks`, finite = TRUE)), digits=2)
 scaled$`Turnovers`<-round(rescale(scaled$`Turnovers`, to = c(0, 100), 
-                              from = range(scaled$`Turnovers`, finite = TRUE)), digits=2)
+                                  from = range(scaled$`Turnovers`, finite = TRUE)), digits=2)
 scaled$`Personal Fouls`<-round(rescale(scaled$`Personal Fouls`, to = c(0, 100), 
-                              from = range(scaled$`Personal Fouls`, finite = TRUE)), digits=2)
+                                       from = range(scaled$`Personal Fouls`, finite = TRUE)), digits=2)
 scaled$`Points`<-round(rescale(scaled$`Points`, to = c(0, 100), 
-                              from = range(scaled$`Points`, finite = TRUE)), digits=2)
+                               from = range(scaled$`Points`, finite = TRUE)), digits=2)
 #Shiny App
 library(shiny)
 
-cols2 = c(4,6:30)
 ui <- fluidPage(
   titlePanel('Comparing Per Game Individual NBA Stats'),
   headerPanel('Input Selection'),
@@ -140,9 +142,9 @@ ui <- fluidPage(
   mainPanel(
     tabsetPanel(
       tabPanel("Scatterplot Team Comparison", plotlyOutput("compare_plot"), h6("Scatter plot showing the relationship between your choosen X and Y Variables, color coordinated by your selected Teams.")),
-      tabPanel("Histogram Team Comparison", plotlyOutput('compare_plot_hist'), h6("Histogram showing the number of players each of your selected Team has by your choosen X Variable.")),
+      tabPanel("Histogram Team Comparison", plotlyOutput('compare_plot_hist'), h6("Histogram showing the number of players each of your selected Team has in a specified range of the X Variable.")),
       tabPanel("Scatterplot Position Comparison", plotlyOutput("plot"), h6("Scatter plot showing the relationship between your choosen X and Y Variables, color coordinated by position. This graph plots every player in the NBA.")),
-      tabPanel("Player Comparison", plotlyOutput("scatterpolar"), h6("Scatter polar plot showing a comparison between your two selected players. Standarized to a scale of 0 to 100."))
+      tabPanel("Polar Diagram Player Comparison", plotlyOutput("scatterpolar"), h6("Scatter polar plot showing a comparison between your two selected players. Standarized on a scale of 0 to 100."))
     )
   )
 )
@@ -225,9 +227,9 @@ server <- function(input, output) {
         r = as.numeric(scatterpolar_data2()[1,]),
         theta = names(scatterpolar_data2())) %>% 
       layout(polar = list(
-               radialaxis = list(
-                 visible = T,
-                 range = "auto")), showlegend = F)) 
+        radialaxis = list(
+          visible = T,
+          range = "auto")), showlegend = F)) 
 }
 
 shinyApp(ui,server)
