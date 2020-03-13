@@ -141,10 +141,22 @@ ui <- fluidPage(
     selectInput('player2', "Player 2 (Green)", unique(nbadata2$Player), selected="James Harden")),
   mainPanel(
     tabsetPanel(
-      tabPanel("Scatterplot Team Comparison", plotlyOutput("compare_plot"), h6("Scatter plot showing the relationship between your choosen X and Y Variables, color coordinated by your selected Teams.")),
-      tabPanel("Histogram Team Comparison", plotlyOutput('compare_plot_hist'), h6("Histogram showing the number of players each of your selected Team has in a specified range of the X Variable.")),
-      tabPanel("Scatterplot Position Comparison", plotlyOutput("plot"), h6("Scatter plot showing the relationship between your choosen X and Y Variables, color coordinated by position. This graph plots every player in the NBA.")),
-      tabPanel("Polar Diagram Player Comparison", plotlyOutput("scatterpolar"), h6("Scatter polar plot showing a comparison between your two selected players. Standarized on a scale of 0 to 100."))
+      tabPanel("Scatterplot Team Comparison", 
+               plotlyOutput("compare_plot"), 
+               h6("Scatter plot showing the relationship between your choosen X and Y Variables, 
+                  color coordinated by your selected Teams.")),
+      tabPanel("Histogram Team Comparison", 
+               plotlyOutput('compare_plot_hist'), 
+               h6("Histogram showing the number of players each of your selected Team has in a
+                  specified range of the X Variable.")),
+      tabPanel("Scatterplot Position Comparison", 
+               plotlyOutput("plot"), 
+               h6("Scatter plot showing the relationship between your choosen X and Y Variables,
+                  color coordinated by position. This graph plots every player in the NBA.")),
+      tabPanel("Polar Diagram Player Comparison", 
+               plotlyOutput("scatterpolar"), 
+               h6("Scatter polar plot showing a comparison between your two selected players. 
+                  Standarized on a scale of 0 to 100."))
     )
   )
 )
