@@ -3,9 +3,11 @@
 knitr::opts_chunk$set(echo = TRUE)
 library(shiny)
 library(tidyverse)
+library(plyr)
 library(rvest)
 library(plotly)
 library(scales)
+library(markdown)
 
 
 
